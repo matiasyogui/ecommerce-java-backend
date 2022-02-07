@@ -1,5 +1,6 @@
 package com.myogui.ecommercejava.controller;
 
+import com.myogui.ecommercejava.handle.ProductErrorHandle;
 import com.myogui.ecommercejava.model.Product;
 import com.myogui.ecommercejava.model.exceptions.ApiRestException;
 import com.myogui.ecommercejava.service.ProductService;

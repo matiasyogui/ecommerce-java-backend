@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAllProductByCategory(String category) throws ApiRestException {
         var products = repository.findAllByCategory(category);
-        if(Objects.isNull(products)) {
+        if(products.isEmpty()) {
             throw new ApiRestException("Category not found.");
         }
         return products;
