@@ -15,4 +15,5 @@ public class UserResponse {
     private String username;
     private String email;
     private LocalDateTime creationDate;
+    private String token;
 }

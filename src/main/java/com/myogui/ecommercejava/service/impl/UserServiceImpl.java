@@ -6,6 +6,7 @@ import com.myogui.ecommercejava.model.exceptions.ApiRestException;
 import com.myogui.ecommercejava.model.request.UserRequest;
 import com.myogui.ecommercejava.model.response.UserResponse;
 import com.myogui.ecommercejava.repository.UserRepository;
+import com.myogui.ecommercejava.security.JwtProvider;
 import com.myogui.ecommercejava.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserRepository repository;
     private final PasswordEncoder pwEncoder;
+    private final JwtProvider jwtProvider;
 
     @Override
     public UserResponse registerUser(UserRequest user) throws ApiRestException {
@@ -34,7 +37,9 @@ public class UserServiceImpl implements UserService {
         if(user == null || !pwEncoder.matches(pw, user.getPassword())) {
             throw new ApiRestException("Usuario o contraseña incorrecto.");
         }
-        //var token = jwtProvider.getJWTToken(request.getUsername()); IMPLEMENTAR JWT
-        return UserBuilder.documentToResponse(user);
+
+        var userRes = UserBuilder.documentToResponse(user);
+        userRes.setToken(jwtProvider.getJWTToken(username));
+        return userRes;
     }
 }
