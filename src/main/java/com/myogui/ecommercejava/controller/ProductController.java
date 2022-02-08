@@ -1,8 +1,9 @@
 package com.myogui.ecommercejava.controller;
 
-import com.myogui.ecommercejava.handle.ProductErrorHandle;
-import com.myogui.ecommercejava.model.Product;
+import com.myogui.ecommercejava.model.document.Product;
 import com.myogui.ecommercejava.model.exceptions.ApiRestException;
+import com.myogui.ecommercejava.model.request.ProductRequest;
+import com.myogui.ecommercejava.model.response.ProductResponse;
 import com.myogui.ecommercejava.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -17,17 +18,17 @@ public class ProductController {
     private final ProductService service;
 
     @PostMapping("")
-    public Product newProduct(@Validated @RequestBody Product product) {
+    public ProductResponse newProduct(@Validated @RequestBody ProductRequest product) {
         return service.createProduct(product);
     }
 
     @GetMapping("")
-    public List<Product> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return service.getAllProducts();
     }
 
     @GetMapping("/{category}")
-    public List<Product> getAllProductsByCategory(@PathVariable String category) throws ApiRestException {
+    public List<ProductResponse> getAllProductsByCategory(@PathVariable String category) throws ApiRestException {
         return service.getAllProductByCategory(category);
     }
 
@@ -37,12 +38,12 @@ public class ProductController {
     } */
 
     @PatchMapping("/{code}")
-    public Product updateProduct(@PathVariable Integer code, @RequestBody @Validated Product newProduct) throws ApiRestException {
+    public ProductResponse updateProduct(@PathVariable Integer code, @RequestBody @Validated ProductRequest newProduct) throws ApiRestException {
         return service.updateProduct(code, newProduct);
     }
 
     @DeleteMapping("/{code}")
-    public Product delete(@PathVariable Integer code) throws ApiRestException {
-        return service.deleteProductByCode(code);
+    public void delete(@PathVariable Integer code) throws ApiRestException {
+        service.deleteProductByCode(code);
     }
 }

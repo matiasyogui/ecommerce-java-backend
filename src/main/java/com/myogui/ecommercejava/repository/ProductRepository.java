@@ -1,6 +1,6 @@
 package com.myogui.ecommercejava.repository;
 
-import com.myogui.ecommercejava.model.Product;
+import com.myogui.ecommercejava.model.document.Product;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
