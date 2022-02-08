@@ -13,21 +13,21 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/productos")
+@RequestMapping("/ecommerce")
 public class ProductController {
     private final ProductService service;
 
-    @PostMapping("")
+    @PostMapping("/productos")
     public ProductResponse newProduct(@Validated @RequestBody ProductRequest product) {
         return service.createProduct(product);
     }
 
-    @GetMapping("")
+    @GetMapping("/productos")
     public List<ProductResponse> getAllProducts() {
         return service.getAllProducts();
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/productos/{category}")
     public List<ProductResponse> getAllProductsByCategory(@PathVariable String category) throws ApiRestException {
         return service.getAllProductByCategory(category);
     }
@@ -37,12 +37,12 @@ public class ProductController {
         return service.getProductByCode(code);
     } */
 
-    @PatchMapping("/{code}")
+    @PatchMapping("/productos/{code}")
     public ProductResponse updateProduct(@PathVariable Integer code, @RequestBody @Validated ProductRequest newProduct) throws ApiRestException {
         return service.updateProduct(code, newProduct);
     }
 
-    @DeleteMapping("/{code}")
+    @DeleteMapping("/productos/{code}")
     public void delete(@PathVariable Integer code) throws ApiRestException {
         service.deleteProductByCode(code);
     }
