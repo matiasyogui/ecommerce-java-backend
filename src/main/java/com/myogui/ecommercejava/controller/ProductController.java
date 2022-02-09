@@ -18,7 +18,7 @@ public class ProductController {
     private final ProductService service;
 
     @PostMapping("/productos")
-    public ProductResponse newProduct(@Validated @RequestBody ProductRequest product) {
+    public ProductResponse newProduct(@Validated @RequestBody ProductRequest product) throws ApiRestException {
         return service.createProduct(product);
     }
 

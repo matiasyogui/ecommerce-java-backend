@@ -8,7 +8,7 @@ import com.myogui.ecommercejava.model.response.ProductResponse;
 import java.util.List;
 
 public interface ProductService {
-    ProductResponse createProduct(ProductRequest product);
+    ProductResponse createProduct(ProductRequest product) throws ApiRestException;
     //Product getProductByCode(Integer code) throws ApiRestException;
     List<ProductResponse> getAllProducts();
     List<ProductResponse> getAllProductByCategory(String category) throws ApiRestException;

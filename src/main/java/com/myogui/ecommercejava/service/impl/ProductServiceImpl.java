@@ -19,7 +19,10 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
 
     @Override
-    public ProductResponse createProduct(ProductRequest productReq) {
+    public ProductResponse createProduct(ProductRequest productReq) throws ApiRestException {
+        if(repository.findByCode(productReq.getCode()) != null) {
+            throw new ApiRestException("Codigo de producto ya creado.");
+        }
         var document = repository.save(ProductBuilder.requestToDocumentCreate(productReq));
         return ProductBuilder.documentToResponseCreate(document);
     }

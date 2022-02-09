@@ -22,5 +22,5 @@ public class Cart {
     private String email;
     private LocalDateTime creationDate;
     private String address;
-    private List<CartItem> cartList; //<ProdCode, Quantity>
+    private List<CartItem> cartList;
 }
