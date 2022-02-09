@@ -16,7 +16,6 @@ public class ProductResponse {
     private String name;
     private String category;
     private Integer price;
-    private Integer stock;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
     private boolean status;

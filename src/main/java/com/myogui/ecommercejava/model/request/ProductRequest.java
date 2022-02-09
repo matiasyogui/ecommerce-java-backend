@@ -12,5 +12,4 @@ public class ProductRequest {
     private String name;
     private String category;
     private Integer price;
-    private Integer stock;
 }

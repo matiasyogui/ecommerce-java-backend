@@ -27,7 +27,7 @@ public class JwtProvider implements Serializable {
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 60000)) //properties
+                .setExpiration(new Date(System.currentTimeMillis() + 600000)) //properties
                 .signWith(SignatureAlgorithm.HS512, "springbootjwt".getBytes()) //properties TODO
                 .compact();
     }

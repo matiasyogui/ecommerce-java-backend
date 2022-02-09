@@ -16,7 +16,6 @@ public class ProductBuilder {
                 .name(request.getName())
                 .price(request.getPrice())
                 .category(request.getCategory())
-                .stock(request.getStock())
                 .creationDate(LocalDateTime.now())
                 .status(Boolean.TRUE)
                 .build();
@@ -29,7 +28,6 @@ public class ProductBuilder {
                 .name(request.getName())
                 .price(request.getPrice())
                 .category(request.getCategory())
-                .stock(request.getStock())
                 .modificationDate(LocalDateTime.now())
                 .build();
     }
@@ -40,7 +38,6 @@ public class ProductBuilder {
                 .name(doc.getName())
                 .category(doc.getCategory())
                 .price(doc.getPrice())
-                .stock(doc.getStock())
                 .creationDate(doc.getCreationDate())
                 .modificationDate(doc.getModificationDate())
                 .status(doc.isStatus())
@@ -76,7 +73,6 @@ public class ProductBuilder {
                 .name(entity.getName())
                 .category(entity.getCategory())
                 .price(entity.getPrice())
-                .stock(entity.getStock())
                 .creationDate(entity.getCreationDate())
                 .modificationDate(entity.getModificationDate())
                 .status(entity.isStatus())

@@ -5,21 +5,22 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document("products")
-public class Product {
+@Document("cart")
+public class Cart {
     @Id
     private String id;
-    private Integer code;
-    private String name;
-    private String category;
-    private Integer price;
+    private Integer cartCode;
+    private String email;
     private LocalDateTime creationDate;
-    private LocalDateTime modificationDate;
-    private boolean status;
+    private String address;
+    private List<CartItem> cartList; //<ProdCode, Quantity>
 }
