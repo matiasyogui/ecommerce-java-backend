@@ -1,10 +1,9 @@
 package com.myogui.ecommercejava.service.impl;
 
 import com.myogui.ecommercejava.builder.CartBuilder;
-import com.myogui.ecommercejava.builder.ProductBuilder;
 import com.myogui.ecommercejava.model.document.Cart;
 import com.myogui.ecommercejava.model.document.CartItem;
-import com.myogui.ecommercejava.model.document.Product;
+import com.myogui.ecommercejava.model.document.Order;
 import com.myogui.ecommercejava.model.exceptions.ApiRestException;
 import com.myogui.ecommercejava.model.request.CartRequest;
 import com.myogui.ecommercejava.model.response.CartResponse;
@@ -14,6 +13,9 @@ import com.myogui.ecommercejava.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 @Service
@@ -21,6 +23,7 @@ import java.util.Objects;
 public class CartServiceImpl implements CartService {
     private final CartRepository repository;
     private final ProductRepository productRepository;
+    private final EmailSenderImpl sender;
 
     @Override
     public CartResponse createCart(CartRequest cart) throws ApiRestException {
@@ -34,10 +37,12 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartResponse addToCart(Integer cartCode, CartItem cartItem) throws ApiRestException {
         var cart = validateCartByCartCode(cartCode);
-        var product = productRepository.findByCode(cartItem.getProductCode());
+        var product = productRepository.findByCode(Integer.valueOf(cartItem.getProductCode()));
+
         if(Objects.isNull(product)) {
             throw new ApiRestException("Codigo de producto no existente.");
         }
+        cartItem.setProductCode(product.getName()); //guardo el nombre del producto en vez del codigo. Facilita la creacio de la orden
         cart.getCartList().add(cartItem);
         return CartBuilder.documentToResponse(repository.save(cart));
     }
@@ -62,6 +67,19 @@ public class CartServiceImpl implements CartService {
         Cart cartUpdated = CartBuilder.requestToDocument(newCart);
         cartUpdated.setCreationDate(oldCart.getCreationDate());
         return CartBuilder.documentToResponse(repository.save(cartUpdated));
+    }
+
+    @Override
+    public Order createOrder(Integer cartCode) throws ApiRestException {
+        var cart = validateCartByCartCode(cartCode);
+
+        var order = Order.builder().number(cart.getCartCode())
+                        .email(cart.getEmail()).creationDate(LocalDateTime.now())
+                        .productsList(cart.getCartList()).status(true).address(cart.getAddress()).build();
+
+        sender.sendEmailTo(order);
+        cart.getCartList().clear(); //TODO ver vaciar carrito
+        return order;
     }
 
 

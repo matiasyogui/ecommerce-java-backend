@@ -2,6 +2,7 @@ package com.myogui.ecommercejava.controller;
 
 import com.myogui.ecommercejava.model.document.Cart;
 import com.myogui.ecommercejava.model.document.CartItem;
+import com.myogui.ecommercejava.model.document.Order;
 import com.myogui.ecommercejava.model.exceptions.ApiRestException;
 import com.myogui.ecommercejava.model.request.CartRequest;
 import com.myogui.ecommercejava.model.response.CartResponse;
@@ -41,5 +42,10 @@ public class CartController {
     @PutMapping("/carrito/{cartCode}")
     public CartResponse updateByCartCode(@PathVariable Integer cartCode, @RequestBody CartRequest cart) throws ApiRestException {
         return service.updateByCartCode(cartCode, cart);
+    }
+
+    @PostMapping("/carrito/{cartCode}/confirmarCompra")
+    public Order createOrder(@PathVariable Integer cartCode) throws ApiRestException {
+        return service.createOrder(cartCode);
     }
 }
