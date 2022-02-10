@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Document("user")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User {
+public class User implements Serializable {
     @Id
     private String id;
     private String fullName;

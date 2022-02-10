@@ -21,8 +21,8 @@ public class UserController {
         return service.registerUser(user);
     }
 
-    @PostMapping("/login")
-    public UserResponse login(@RequestParam("username") String username, @RequestParam("password") String password) throws ApiRestException {
+    @PostMapping("/login") //devuelve un jwttoken.
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password) throws ApiRestException {
         return service.login(username, password);
     }
 }

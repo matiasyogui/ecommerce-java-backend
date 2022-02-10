@@ -7,5 +7,5 @@ import com.myogui.ecommercejava.model.response.UserResponse;
 
 public interface UserService {
     UserResponse registerUser(UserRequest user) throws ApiRestException;
-    UserResponse login(String username, String pw) throws ApiRestException;
+    String login(String username, String pw) throws ApiRestException;
 }

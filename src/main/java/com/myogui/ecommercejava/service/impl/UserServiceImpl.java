@@ -1,6 +1,8 @@
 package com.myogui.ecommercejava.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.myogui.ecommercejava.builder.UserBuilder;
+import com.myogui.ecommercejava.cache.CacheUser;
 import com.myogui.ecommercejava.model.document.User;
 import com.myogui.ecommercejava.model.exceptions.ApiRestException;
 import com.myogui.ecommercejava.model.request.UserRequest;
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -19,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final PasswordEncoder pwEncoder;
     private final JwtProvider jwtProvider;
+    private final CacheUser<User> cache;
 
     @Override
     public UserResponse registerUser(UserRequest user) throws ApiRestException {
@@ -31,15 +36,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse login(String username, String pw) throws ApiRestException {
-        var user = repository.findByUsername(username);
-
-        if(user == null || !pwEncoder.matches(pw, user.getPassword())) {
-            throw new ApiRestException("Usuario o contraseña incorrecto.");
+    public String login(String username, String pw) throws ApiRestException {
+        var tokenFromCache = cache.recover(username);
+        if (!Objects.isNull(tokenFromCache)) {
+            return tokenFromCache;
         }
 
-        var userRes = UserBuilder.documentToResponse(user);
-        userRes.setToken(jwtProvider.getJWTToken(username));
-        return userRes;
+        var userFromDatabase = repository.findByUsername(username);
+        if(userFromDatabase == null || !pwEncoder.matches(pw, userFromDatabase.getPassword())) {
+            throw new ApiRestException("Usuario o contraseña incorrecto.");
+        }
+        return saveUserInCache(username, jwtProvider.getJWTToken(username));
+    }
+
+    public String saveUserInCache(String username, String token) {
+        return cache.save(username, token);
     }
 }
