@@ -1,10 +1,9 @@
 package com.myogui.ecommercejava.controller;
 
+import com.myogui.ecommercejava.model.document.UserForLogin;
 import com.myogui.ecommercejava.model.exceptions.ApiRestException;
 import com.myogui.ecommercejava.model.request.UserRequest;
 import com.myogui.ecommercejava.model.response.UserResponse;
-import com.myogui.ecommercejava.repository.UserRepository;
-import com.myogui.ecommercejava.security.JwtProvider;
 import com.myogui.ecommercejava.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/login") //devuelve un jwttoken.
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password) throws ApiRestException {
-        return service.login(username, password);
+    public String login(@RequestBody UserForLogin user) throws ApiRestException {
+        return service.login(user);
     }
 }

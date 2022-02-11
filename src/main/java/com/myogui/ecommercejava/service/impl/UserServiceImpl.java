@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.myogui.ecommercejava.builder.UserBuilder;
 import com.myogui.ecommercejava.cache.CacheUser;
 import com.myogui.ecommercejava.model.document.User;
+import com.myogui.ecommercejava.model.document.UserForLogin;
 import com.myogui.ecommercejava.model.exceptions.ApiRestException;
 import com.myogui.ecommercejava.model.request.UserRequest;
 import com.myogui.ecommercejava.model.response.UserResponse;
@@ -36,17 +37,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(String username, String pw) throws ApiRestException {
-        var tokenFromCache = cache.recover(username);
+    public String login(UserForLogin user) throws ApiRestException {
+        var tokenFromCache = cache.recover(user.getUsername());
         if (!Objects.isNull(tokenFromCache)) {
             return tokenFromCache;
         }
 
-        var userFromDatabase = repository.findByUsername(username);
-        if(userFromDatabase == null || !pwEncoder.matches(pw, userFromDatabase.getPassword())) {
+        var userFromDatabase = repository.findByUsername(user.getUsername());
+        if(userFromDatabase == null || !pwEncoder.matches(user.getPassword(), userFromDatabase.getPassword())) {
             throw new ApiRestException("Usuario o contraseña incorrecto.");
         }
-        return saveUserInCache(username, jwtProvider.getJWTToken(username));
+        return saveUserInCache(user.getUsername(), jwtProvider.getJWTToken(user.getUsername()));
     }
 
     public String saveUserInCache(String username, String token) {
