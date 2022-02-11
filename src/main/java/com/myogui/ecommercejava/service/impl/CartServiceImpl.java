@@ -78,7 +78,7 @@ public class CartServiceImpl implements CartService {
                         .email(cart.getEmail()).creationDate(LocalDateTime.now())
                         .productsList(List.copyOf(cart.getCartList())).status(true).address(cart.getAddress()).build();
 
-        cart.getCartList().clear(); //TODO ver vaciar carrito
+        cart.getCartList().clear();
         repository.save(cart);
         sender.sendEmailTo(order);
         return orderRepository.save(order);

@@ -1,6 +1,7 @@
 package com.myogui.ecommercejava.cache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myogui.ecommercejava.config.ApplicationProperties;
 import com.myogui.ecommercejava.utils.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +19,12 @@ public class CacheUserImpl<T> implements CacheUser<T> {
     private final RedisTemplate<String, String> redisTemplate;
     private HashOperations<String, String, String> hashOperations;
     private final ObjectMapper mapper;
-    //private final ApplicacionProperties properties;
+    private final ApplicationProperties properties;
 
     @PostConstruct
     void setHashOperations() {
         hashOperations = this.redisTemplate.opsForHash();
-        this.redisTemplate.expire(Constants.NAME_MAP_USER, Duration.ofMillis(60000)); //TODO properties.getTimeOfLife()));
+        this.redisTemplate.expire(Constants.NAME_MAP_USER, Duration.ofMillis(properties.getTimeOfLife()));
     }
 
     @Override

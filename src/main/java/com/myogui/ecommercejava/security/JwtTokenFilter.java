@@ -1,5 +1,6 @@
 package com.myogui.ecommercejava.security;
 
+import com.myogui.ecommercejava.config.ApplicationProperties;
 import com.myogui.ecommercejava.utils.Constants;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
+    private final ApplicationProperties properties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -54,7 +56,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private Claims validateToken(HttpServletRequest request) {
         var jwtToken = request.getHeader(Constants.HEADER_TOKEN)
                 .replace(Constants.PREFIX_TOKEN, "");
-        return Jwts.parser().setSigningKey("springbootjwt".getBytes()) //TODO properties
+        return Jwts.parser().setSigningKey(properties.getJwtSecret().getBytes())
                 .parseClaimsJws(jwtToken).getBody();
     }
 

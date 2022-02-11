@@ -1,5 +1,6 @@
 package com.myogui.ecommercejava.security;
 
+import com.myogui.ecommercejava.config.ApplicationProperties;
 import com.myogui.ecommercejava.utils.Constants;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class JwtProvider implements Serializable {
+    private final ApplicationProperties properties;
 
     public String getJWTToken(String username) {
         var grantedAuthorities =
@@ -27,8 +29,8 @@ public class JwtProvider implements Serializable {
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000)) //properties
-                .signWith(SignatureAlgorithm.HS512, "springbootjwt".getBytes()) //properties TODO
+                .setExpiration(new Date(System.currentTimeMillis() + properties.getExpiration()))
+                .signWith(SignatureAlgorithm.HS512, properties.getJwtSecret().getBytes())
                 .compact();
     }
 

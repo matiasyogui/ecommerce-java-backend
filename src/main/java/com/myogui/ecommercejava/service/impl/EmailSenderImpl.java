@@ -33,10 +33,14 @@ public class EmailSenderImpl implements EmailSender {
     }
 
     public String listOfProductsToString(List<CartItem> cartList) {
+        int total = 0;
         StringBuilder stringBuilder = new StringBuilder();
         for(CartItem i : cartList) {
             stringBuilder.append(texto(i));
+            total += i.getPrice() * i.getQuantity();
         }
+
+        stringBuilder.append("Total: ").append(total).append(".\n");
 
         return stringBuilder.toString();
     }

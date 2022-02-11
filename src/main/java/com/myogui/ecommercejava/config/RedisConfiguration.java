@@ -16,10 +16,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 @EnableAutoConfiguration(exclude = {org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration.class})
 public class RedisConfiguration {
+    private final ApplicationProperties properties;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        var config = new RedisStandaloneConfiguration("localhost", 6379); //TODO properties
+        var config = new RedisStandaloneConfiguration(properties.getHost(), properties.getPort());
         return new JedisConnectionFactory(config);
     }
 
