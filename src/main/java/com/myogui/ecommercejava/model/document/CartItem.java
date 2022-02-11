@@ -10,4 +10,5 @@ import lombok.*;
 public class CartItem {
     private String productCode;
     private Integer quantity;
+    private Integer price;
 }

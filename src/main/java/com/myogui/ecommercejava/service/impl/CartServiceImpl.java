@@ -8,15 +8,14 @@ import com.myogui.ecommercejava.model.exceptions.ApiRestException;
 import com.myogui.ecommercejava.model.request.CartRequest;
 import com.myogui.ecommercejava.model.response.CartResponse;
 import com.myogui.ecommercejava.repository.CartRepository;
+import com.myogui.ecommercejava.repository.OrderRepository;
 import com.myogui.ecommercejava.repository.ProductRepository;
 import com.myogui.ecommercejava.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +23,7 @@ public class CartServiceImpl implements CartService {
     private final CartRepository repository;
     private final ProductRepository productRepository;
     private final EmailSenderImpl sender;
+    private final OrderRepository orderRepository;
 
     @Override
     public CartResponse createCart(CartRequest cart) throws ApiRestException {
@@ -43,6 +43,7 @@ public class CartServiceImpl implements CartService {
             throw new ApiRestException("Codigo de producto no existente.");
         }
         cartItem.setProductCode(product.getName()); //guardo el nombre del producto en vez del codigo. Facilita la creacio de la orden
+        cartItem.setPrice(product.getPrice());
         cart.getCartList().add(cartItem);
         return CartBuilder.documentToResponse(repository.save(cart));
     }
@@ -75,11 +76,12 @@ public class CartServiceImpl implements CartService {
 
         var order = Order.builder().number(cart.getCartCode())
                         .email(cart.getEmail()).creationDate(LocalDateTime.now())
-                        .productsList(cart.getCartList()).status(true).address(cart.getAddress()).build();
+                        .productsList(List.copyOf(cart.getCartList())).status(true).address(cart.getAddress()).build();
 
-        sender.sendEmailTo(order);
         cart.getCartList().clear(); //TODO ver vaciar carrito
-        return order;
+        repository.save(cart);
+        sender.sendEmailTo(order);
+        return orderRepository.save(order);
     }
 
 

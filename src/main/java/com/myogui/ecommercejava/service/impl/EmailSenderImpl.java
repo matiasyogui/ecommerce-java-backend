@@ -29,7 +29,7 @@ public class EmailSenderImpl implements EmailSender {
     }
 
     public String texto(CartItem cartItem) {
-        return cartItem.getProductCode() + " X " + cartItem.getQuantity() + " \n";
+        return cartItem.getProductCode() + ". Cant: " + cartItem.getQuantity() + ". Precio: " + cartItem.getPrice() + " \n";
     }
 
     public String listOfProductsToString(List<CartItem> cartList) {
